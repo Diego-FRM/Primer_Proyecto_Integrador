@@ -3,3 +3,4 @@ Primer Proyecto Integrador de la materia Introducción al Desarrollo Web Otoño 
 Integrantes del equipo:
 - Diego Federico Romero Miravete
 - Emiliano Sebastián Millán Giffard
+- Emilio González Acosta 
