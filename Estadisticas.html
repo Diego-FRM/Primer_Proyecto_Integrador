@@ -35,13 +35,11 @@
   </div>
 </nav>
 
-<!-- Header -->
 <div class="container pt-5 mt-4 text-center">
   <h2 class="fw-bold text-primary">Estadísticas</h2>
   <p class="text-secondary">Dashboard de métricas y tendencias en seguridad informática</p>
 </div>
 
-<!-- Stats Cards -->
 <div class="container my-5">
   <div class="row g-4">
     <div class="col-md-3">
@@ -50,7 +48,7 @@
           <span class="fw-semibold">Incidentes Reportados</span>
           <i class="bi bi-shield-check text-success fs-5"></i>
         </div>
-        <h3 class="fw-bold">1,925</h3>
+        <h3 class="fw-bold" id="totalIncidentes">1,925</h3>
       </div>
     </div>
     <div class="col-md-3">
@@ -59,7 +57,7 @@
           <span class="fw-semibold">Alertas Activas</span>
           <i class="bi bi-exclamation-triangle text-warning fs-5"></i>
         </div>
-        <h3 class="fw-bold">314</h3>
+        <h3 class="fw-bold" id="alertasActivas">314</h3>
       </div>
     </div>
     <div class="col-md-3">
@@ -68,7 +66,7 @@
           <span class="fw-semibold">Vulnerabilidades Críticas</span>
           <i class="bi bi-lock-fill text-danger fs-5"></i>
         </div>
-        <h3 class="fw-bold">87</h3>
+        <h3 class="fw-bold" id="vulnerabilidadesCriticas">87</h3>
       </div>
     </div>
     <div class="col-md-3">
@@ -117,10 +115,43 @@
   </div>
 </footer>
 
+<!-- Datos -->
+<script>
+const datosGraficaAtaques = {
+  etiquetas: ['Phishing', 'Ransomware', 'Malware', 'DDoS', 'BEC/Fraude', 'Otros'],
+  valores: [39.6, 22, 20, 8, 6, 4.4], 
+  año: 2024,
+  totalIncidentes: 493000000,
+  frecuencia: 'Un ciberataque cada 39 segundos',
+  fuente: 'Techopedia & ExpressVPN Cyber Report 2024',
+  urlFuente: 'https://www.techopedia.com/es/estadisticas-ciberseguridad'
+};
+
+const datosGraficaVulnerabilidades = {
+  meses: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+  cantidades: [45, 52, 58, 65, 62, 68, 55, 60, 50, 48, 42, 35],
+  año: 2024,
+  totalAnual: 768,
+  incrementoAnual: 20,
+  fuente: 'VulnCheck 2024 Report & CISA',
+  urlFuente: 'https://blog.segu-info.com.ar/2025/02/analisis-de-las-principales.html'
+};
+
+const resumenEstadisticas = {
+  totalIncidentes: 493000000, 
+  vulnerabilidadesExplotadas: 768,
+  aumentoRansomware: 55,
+  organizacionesAfectadas: 72.7,
+  costoPromedioRansomware: '4.54 millones USD',
+  phishingCorreosDiarios: '3.4 mil millones',
+  porcentajeErrorHumano: 95,
+  fuente: 'Múltiples reportes 2024 (ExpressVPN, Sophos, ESET)',
+  urlFuente: 'https://www.expressvpn.com/es/blog/the-true-cost-of-cyber-attacks-in-2024-and-beyond/'
+};
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
-<!-- Theme toggle -->
 <script>
   const themeToggle = document.getElementById('themeToggle');
   const icon = themeToggle.querySelector('i');
@@ -142,16 +173,14 @@
   updateIcon(savedTheme);
 </script>
 
-<!-- Chart.js config -->
 <script>
-  // Gráfico de Barras (sin líneas de fondo)
   new Chart(document.getElementById('chartBar'), {
     type: 'bar',
     data: {
-      labels: ['Phishing', 'Malware', 'Robo', 'Vulnerabilidad'],
+      labels: datosGraficaAtaques.etiquetas,
       datasets: [{
-        label: 'Casos detectados',
-        data: [430, 350, 280, 160],
+        label: 'Casos detectados (%)',
+        data: datosGraficaAtaques.valores,
         backgroundColor: '#20c997'
       }]
     },
@@ -174,14 +203,13 @@
     }
   });
 
-  // Gráfico de Línea (sin líneas de fondo)
   new Chart(document.getElementById('chartLine'), {
     type: 'line',
     data: {
-      labels: ['Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+      labels: datosGraficaVulnerabilidades.meses,
       datasets: [{
-        label: 'Incidentes',
-        data: [95, 112, 88, 130, 145, 158],
+        label: 'Vulnerabilidades CVE',
+        data: datosGraficaVulnerabilidades.cantidades,
         borderColor: '#0d6efd',
         backgroundColor: 'rgba(13,110,253,0.1)',
         tension: 0.4,
@@ -212,6 +240,11 @@
   });
 </script>
 
+<script>
+  document.getElementById('totalIncidentes').textContent = resumenEstadisticas.totalIncidentes.toLocaleString();
+  document.getElementById('alertasActivas').textContent = resumenEstadisticas.vulnerabilidadesExplotadas;
+  document.getElementById('vulnerabilidadesCriticas').textContent = resumenEstadisticas.aumentoRansomware + '%';
+</script>
 
 </body>
 </html>
