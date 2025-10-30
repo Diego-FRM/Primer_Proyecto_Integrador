@@ -41,21 +41,20 @@
   </div>
 </nav>
 
+<div class="container pt-5 mt-4 text-center">
+  <h2 class="fw-bold text-primary">Estadísticas</h2>
+  <p class="text-secondary">Dashboard de métricas y tendencias en seguridad informática</p>
+</div>
 
-<main class="container pt-5 mt-4">
-  <h2 class="text-center fw-bold mb-1">Estadísticas</h2>
-  <p class="text-center text-secondary mb-4">Dashboard de métricas y tendencias en seguridad informática</p>
-
-  <!-- Stats -->
-  <div class="row g-4 mb-4">
+<div class="container my-5">
+  <div class="row g-4">
     <div class="col-md-3">
       <div class="p-4 bg-body-secondary rounded shadow-sm h-100">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <span class="fw-semibold">Incidentes reportados</span>
           <i class="bi bi-shield-check text-success"></i>
         </div>
-        <h3 id="kpiIncidentes" class="fw-bold">—</h3>
-        <small class="text-secondary">Frecuencia: <span id="kpiFrecuencia">—</span></small>
+        <h3 class="fw-bold" id="totalIncidentes">1,925</h3>
       </div>
     </div>
     <div class="col-md-3">
@@ -64,8 +63,7 @@
           <span class="fw-semibold">Vulns explotadas</span>
           <i class="bi bi-bug text-danger"></i>
         </div>
-        <h3 id="kpiVulns" class="fw-bold">—</h3>
-        <small class="text-secondary">Crecimiento anual: <span id="kpiIncremento">—</span></small>
+        <h3 class="fw-bold" id="alertasActivas">314</h3>
       </div>
     </div>
     <div class="col-md-3">
@@ -74,8 +72,7 @@
           <span class="fw-semibold">Ransomware (orgs)</span>
           <i class="bi bi-exclamation-octagon text-warning"></i>
         </div>
-        <h3 id="kpiRansomOrgs" class="fw-bold">—</h3>
-        <small class="text-secondary">Aumento: <span id="kpiRansomAumento">—</span></small>
+        <h3 class="fw-bold" id="vulnerabilidadesCriticas">87</h3>
       </div>
     </div>
     <div class="col-md-3">
@@ -134,9 +131,43 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Datos -->
+<script>
+const datosGraficaAtaques = {
+  etiquetas: ['Phishing', 'Ransomware', 'Malware', 'DDoS', 'BEC/Fraude', 'Otros'],
+  valores: [39.6, 22, 20, 8, 6, 4.4], 
+  año: 2024,
+  totalIncidentes: 493000000,
+  frecuencia: 'Un ciberataque cada 39 segundos',
+  fuente: 'Techopedia & ExpressVPN Cyber Report 2024',
+  urlFuente: 'https://www.techopedia.com/es/estadisticas-ciberseguridad'
+};
 
-<!-- Tema -->
+const datosGraficaVulnerabilidades = {
+  meses: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+  cantidades: [45, 52, 58, 65, 62, 68, 55, 60, 50, 48, 42, 35],
+  año: 2024,
+  totalAnual: 768,
+  incrementoAnual: 20,
+  fuente: 'VulnCheck 2024 Report & CISA',
+  urlFuente: 'https://blog.segu-info.com.ar/2025/02/analisis-de-las-principales.html'
+};
+
+const resumenEstadisticas = {
+  totalIncidentes: 493000000, 
+  vulnerabilidadesExplotadas: 768,
+  aumentoRansomware: 55,
+  organizacionesAfectadas: 72.7,
+  costoPromedioRansomware: '4.54 millones USD',
+  phishingCorreosDiarios: '3.4 mil millones',
+  porcentajeErrorHumano: 95,
+  fuente: 'Múltiples reportes 2024 (ExpressVPN, Sophos, ESET)',
+  urlFuente: 'https://www.expressvpn.com/es/blog/the-true-cost-of-cyber-attacks-in-2024-and-beyond/'
+};
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
 <script>
   const themeToggle = document.getElementById('themeToggle');
   const icon = themeToggle.querySelector('i');
@@ -189,35 +220,15 @@
   ];
 </script>
 
-<!-- GRÁFICAS -->
 <script>
-  const fmt = n => typeof n === 'number' ? n.toLocaleString('es-MX') : n;
-
-  document.getElementById('kpiIncidentes').textContent = fmt(resumenEstadisticas.totalIncidentes);
-  document.getElementById('kpiFrecuencia').textContent = datosGraficaAtaques.frecuencia;
-  document.getElementById('kpiVulns').textContent = fmt(resumenEstadisticas.vulnerabilidadesExplotadas);
-  document.getElementById('kpiIncremento').textContent = `${datosGraficaVulnerabilidades.incrementoAnual}%`;
-  document.getElementById('kpiRansomOrgs').textContent = `${resumenEstadisticas.organizacionesAfectadas}%`;
-  document.getElementById('kpiRansomAumento').textContent = `${resumenEstadisticas.aumentoRansomware}%`;
-  document.getElementById('kpiPhishingEmails').textContent = resumenEstadisticas.phishingCorreosDiarios;
-  document.getElementById('kpiErrorHumano').textContent = `${resumenEstadisticas.porcentajeErrorHumano}%`;
-  document.getElementById('anioAtaques').textContent = datosGraficaAtaques.año;
-  document.getElementById('anioVulns').textContent = datosGraficaVulnerabilidades.año;
-
-  const colors = {
-    primary:'#0d6efd', info:'#0dcaf0', success:'#20c997',
-    warning:'#fd7e14', danger:'#dc3545', purple:'#6f42c1',
-    teal:'#198754', gray:'#adb5bd'
-  };
-
-  window.donutChart = new Chart(document.getElementById('chartDonut'), {
-    type:'doughnut',
-    data:{
+  new Chart(document.getElementById('chartBar'), {
+    type: 'bar',
+    data: {
       labels: datosGraficaAtaques.etiquetas,
-      datasets:[{
+      datasets: [{
+        label: 'Casos detectados (%)',
         data: datosGraficaAtaques.valores,
-        backgroundColor:[colors.success,colors.primary,colors.purple,colors.warning,colors.teal,colors.gray],
-        borderWidth:0
+        backgroundColor: '#20c997'
       }]
     },
     options:{
@@ -247,16 +258,19 @@
     }
   });
 
-  window.lineChart = new Chart(document.getElementById('chartLine'), {
-    type:'line',
-    data:{
+  new Chart(document.getElementById('chartLine'), {
+    type: 'line',
+    data: {
       labels: datosGraficaVulnerabilidades.meses,
-      datasets:[{
-        label:'CVEs explotadas',
+      datasets: [{
+        label: 'Vulnerabilidades CVE',
         data: datosGraficaVulnerabilidades.cantidades,
-        borderColor:colors.primary,
-        backgroundColor:'rgba(13,110,253,.12)',
-        tension:.35, fill:true, pointRadius:3, pointBackgroundColor:colors.primary
+        borderColor: '#0d6efd',
+        backgroundColor: 'rgba(13,110,253,0.1)',
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4,
+        pointBackgroundColor: '#0d6efd'
       }]
     },
     options:{
@@ -285,40 +299,10 @@
     }
   });
 
-  const charts = [donutChart, barAbsChart, lineChart, citiesChart];
-  function getBootstrapChartColors() {
-    const cs = getComputedStyle(document.documentElement);
-    const text = cs.getPropertyValue('--bs-body-color').trim() || '#212529';
-    const grid = cs.getPropertyValue('--bs-border-color').trim() || 'rgba(0,0,0,.1)';
-    const bg   = cs.getPropertyValue('--bs-body-bg').trim() || '#fff';
-    return { text, grid, bg };
-  }
-  function applyThemeToCharts() {
-    const { text, grid, bg } = getBootstrapChartColors();
-    Chart.defaults.color = text;
-    Chart.defaults.borderColor = grid;
-    charts.forEach(ch => {
-      if (ch.options.scales) {
-        Object.values(ch.options.scales).forEach(s => {
-          if (s.ticks) s.ticks.color = text;
-          if (s.grid) s.grid.color = grid;
-        });
-      }
-      if (ch.options.plugins?.legend?.labels)
-        ch.options.plugins.legend.labels.color = text;
-      if (ch.options.plugins?.tooltip) {
-        ch.options.plugins.tooltip.titleColor = text;
-        ch.options.plugins.tooltip.bodyColor  = text;
-        ch.options.plugins.tooltip.backgroundColor = bg;
-        ch.options.plugins.tooltip.borderColor = grid;
-      }
-      ch.update();
-    });
-  }
-  applyThemeToCharts();
-  themeToggle.addEventListener('click', () => setTimeout(applyThemeToCharts, 200));
-  new MutationObserver(() => applyThemeToCharts())
-    .observe(document.documentElement, { attributes:true, attributeFilter:['data-bs-theme'] });
+<script>
+  document.getElementById('totalIncidentes').textContent = resumenEstadisticas.totalIncidentes.toLocaleString();
+  document.getElementById('alertasActivas').textContent = resumenEstadisticas.vulnerabilidadesExplotadas;
+  document.getElementById('vulnerabilidadesCriticas').textContent = resumenEstadisticas.aumentoRansomware + '%';
 </script>
 
 </body>
