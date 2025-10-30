@@ -5,25 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CyberSafe Portal - Estadísticas</title>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
+ 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    main { flex: 1; }
+  </style>
 </head>
 <body class="bg-body text-body">
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top border-bottom">
   <div class="container-fluid">
-    <a class="navbar-brand fw-bold text-primary" href="index.html">CyberSafe Portal</a>
+    <a class="navbar-brand fw-bold text-primary" href="#">
+      <i class="bi bi-shield-check me-1"></i>CyberSafe Portal
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarLinks">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarLinks">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
         <li class="nav-item"><a class="nav-link" href="alertas.html">Alertas</a></li>
-        <li class="nav-item"><a class="nav-link active" href="estadisticas.html">Estadísticas</a></li>
+        <li class="nav-item"><a class="nav-link" href="Estadisticas.html">Estadísticas</a></li>
         <li class="nav-item"><a class="nav-link" href="quiz.html">Quiz</a></li>
         <li class="nav-item">
           <button class="btn btn-outline-primary btn-sm ms-3" id="themeToggle" aria-label="Cambiar tema">
@@ -45,8 +51,8 @@
     <div class="col-md-3">
       <div class="p-4 bg-body-secondary rounded shadow-sm h-100">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="fw-semibold">Incidentes Reportados</span>
-          <i class="bi bi-shield-check text-success fs-5"></i>
+          <span class="fw-semibold">Incidentes reportados</span>
+          <i class="bi bi-shield-check text-success"></i>
         </div>
         <h3 class="fw-bold" id="totalIncidentes">1,925</h3>
       </div>
@@ -54,8 +60,8 @@
     <div class="col-md-3">
       <div class="p-4 bg-body-secondary rounded shadow-sm h-100">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="fw-semibold">Alertas Activas</span>
-          <i class="bi bi-exclamation-triangle text-warning fs-5"></i>
+          <span class="fw-semibold">Vulns explotadas</span>
+          <i class="bi bi-bug text-danger"></i>
         </div>
         <h3 class="fw-bold" id="alertasActivas">314</h3>
       </div>
@@ -63,8 +69,8 @@
     <div class="col-md-3">
       <div class="p-4 bg-body-secondary rounded shadow-sm h-100">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="fw-semibold">Vulnerabilidades Críticas</span>
-          <i class="bi bi-lock-fill text-danger fs-5"></i>
+          <span class="fw-semibold">Ransomware (orgs)</span>
+          <i class="bi bi-exclamation-octagon text-warning"></i>
         </div>
         <h3 class="fw-bold" id="vulnerabilidadesCriticas">87</h3>
       </div>
@@ -72,46 +78,56 @@
     <div class="col-md-3">
       <div class="p-4 bg-body-secondary rounded shadow-sm h-100">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="fw-semibold">Usuarios Capacitados</span>
-          <i class="bi bi-people-fill text-primary fs-5"></i>
+          <span class="fw-semibold">Correos de phishing/día</span>
+          <i class="bi bi-envelope-exclamation text-primary"></i>
         </div>
-        <h3 class="fw-bold">5,678</h3>
-        
+        <h3 id="kpiPhishingEmails" class="fw-bold">—</h3>
+        <small class="text-secondary">Error humano: <span id="kpiErrorHumano">—</span></small>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Gráficas -->
-<div class="container mb-5">
+  <!-- Gráficas -->
+  <div class="row g-4 mb-4">
+    <div class="col-lg-6">
+      <div class="p-4 bg-body-secondary rounded shadow-sm h-100">
+        <h5 class="fw-bold">Participación por tipo de ataque (%)</h5>
+        <p class="text-muted small mb-3">Distribución <span id="anioAtaques">—</span></p>
+        <canvas id="chartDonut" height="260"></canvas>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="p-4 bg-body-secondary rounded shadow-sm h-100">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="fw-bold mb-0">Ataques estimados por categoría</h5>
+        </div>
+        <p class="text-muted small mb-3">Cálculo con base en el total anual</p>
+        <canvas id="chartBarAbs" height="260"></canvas>
+      </div>
+    </div>
+  </div>
+
   <div class="row g-4">
-    <div class="col-md-6">
-      <div class="p-4 bg-body-secondary rounded shadow-sm">
-        <h5 class="fw-bold">Incidentes por Categoría</h5>
-        <p class="text-muted small">Distribución de amenazas detectadas</p>
-        <canvas id="chartBar" height="250"></canvas>
+    <div class="col-lg-6">
+      <div class="p-4 bg-body-secondary rounded shadow-sm h-100">
+        <h5 class="fw-bold">Vulnerabilidades explotadas por mes (<span id="anioVulns">—</span>)</h5>
+        <p class="text-muted small mb-3">Evolución mensual</p>
+        <canvas id="chartLine" height="260"></canvas>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="p-4 bg-body-secondary rounded shadow-sm">
-        <h5 class="fw-bold">Tendencia Temporal</h5>
-        <p class="text-muted small">Evolución de incidentes en los últimos 6 meses</p>
-        <canvas id="chartLine" height="250"></canvas>
+    <div class="col-lg-6">
+      <div class="p-4 bg-body-secondary rounded shadow-sm h-100">
+        <h5 class="fw-bold">Ciudades con más incidentes (MX)</h5>
+        <p class="text-muted small mb-3">Top por cantidad reportada</p>
+        <canvas id="chartCities" height="260"></canvas>
       </div>
     </div>
   </div>
-</div>
+</main>
 
-<!-- Footer -->
 <footer class="bg-body-tertiary border-top mt-5 py-3">
-  <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
-    <div class="d-flex align-items-center mb-2 mb-md-0">
-     
-      <span class="fw-semibold">CyberSafe Portal</span>
-    </div>
-    <small class="text-secondary text-end">
-      © 2025 CyberSafe Portal. Educación en seguridad informática.
-    </small>
+  <div class="container text-center">
+    <small class="text-secondary">© 2025 CyberSafe Portal · Educación en seguridad informática</small>
   </div>
 </footer>
 
@@ -155,22 +171,53 @@ const resumenEstadisticas = {
 <script>
   const themeToggle = document.getElementById('themeToggle');
   const icon = themeToggle.querySelector('i');
-
-  function updateIcon(theme) {
-    icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
-  }
-
+  function updateIcon(theme){ icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill'; }
   themeToggle.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-bs-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    updateIcon(newTheme);
+    const t = document.documentElement.getAttribute('data-bs-theme');
+    const n = t === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-bs-theme', n);
+    localStorage.setItem('theme', n);
+    updateIcon(n);
   });
+  const saved = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-bs-theme', saved);
+  updateIcon(saved);
+</script>
 
-  const savedTheme = localStorage.getItem('theme') || 'light';
-  document.documentElement.setAttribute('data-bs-theme', savedTheme);
-  updateIcon(savedTheme);
+<!-- Data -->
+<script>
+  const datosGraficaAtaques = {
+    etiquetas: ['Phishing','Ransomware','Malware','DDoS','BEC/Fraude','Otros'],
+    valores: [39.6,22,20,8,6,4.4],
+    año: 2024,
+    totalIncidentes: 493000000,
+    frecuencia: 'Un ciberataque cada 39 segundos'
+  };
+
+  const datosGraficaVulnerabilidades = {
+    meses: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+    cantidades: [45,52,58,65,62,68,55,60,50,48,42,35],
+    año: 2024,
+    incrementoAnual: 20
+  };
+
+  const resumenEstadisticas = {
+    totalIncidentes: 493000000,
+    vulnerabilidadesExplotadas: 768,
+    aumentoRansomware: 55,
+    organizacionesAfectadas: 72.7,
+    phishingCorreosDiarios: '3.4 mil millones',
+    porcentajeErrorHumano: 95
+  };
+
+  const ubicacionesIncidentes = [
+    { ciudad:'Ciudad de México', cantidadIncidentes:1250 },
+    { ciudad:'Monterrey', cantidadIncidentes:890 },
+    { ciudad:'Guadalajara', cantidadIncidentes:760 },
+    { ciudad:'Tijuana', cantidadIncidentes:420 },
+    { ciudad:'Cancún', cantidadIncidentes:340 },
+    { ciudad:'Ciudad Juárez', cantidadIncidentes:280 }
+  ];
 </script>
 
 <script>
@@ -184,21 +231,29 @@ const resumenEstadisticas = {
         backgroundColor: '#20c997'
       }]
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          grid: { display: false },
-          ticks: { color: 'inherit' }
-        },
-        x: {
-          grid: { display: false },
-          ticks: { color: 'inherit' }
-        }
+    options:{
+      responsive:true,
+      cutout:'60%',
+      plugins:{
+        legend:{ position:'bottom', labels:{ color:'inherit' } },
+        tooltip:{ callbacks:{ label:ctx=>`${ctx.label}: ${ctx.parsed}%` } }
+      }
+    }
+  });
+
+  const absData = datosGraficaAtaques.valores.map(p => Math.round(resumenEstadisticas.totalIncidentes * (p/100)));
+  window.barAbsChart = new Chart(document.getElementById('chartBarAbs'), {
+    type:'bar',
+    data:{
+      labels: datosGraficaAtaques.etiquetas,
+      datasets:[{ data:absData, backgroundColor:colors.info }]
+    },
+    options:{
+      responsive:true,
+      plugins:{ legend:{ display:false } },
+      scales:{
+        y:{ beginAtZero:true, ticks:{ color:'inherit', callback:v=>v.toLocaleString('es-MX') }, grid:{ color:'inherit' } },
+        x:{ ticks:{ color:'inherit' }, grid:{ color:'inherit' } }
       }
     }
   });
@@ -218,27 +273,31 @@ const resumenEstadisticas = {
         pointBackgroundColor: '#0d6efd'
       }]
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          labels: { color: 'inherit' }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          grid: { display: false },
-          ticks: { color: 'inherit' }
-        },
-        x: {
-          grid: { display: false },
-          ticks: { color: 'inherit' }
-        }
+    options:{
+      responsive:true,
+      plugins:{ legend:{ labels:{ color:'inherit' } } },
+      scales:{
+        y:{ beginAtZero:true, ticks:{ color:'inherit' }, grid:{ color:'inherit' } },
+        x:{ ticks:{ color:'inherit' }, grid:{ color:'inherit' } }
       }
     }
   });
-</script>
+
+  window.citiesChart = new Chart(document.getElementById('chartCities'), {
+    type:'bar',
+    data:{
+      labels: ubicacionesIncidentes.map(c=>c.ciudad),
+      datasets:[{ data: ubicacionesIncidentes.map(c=>c.cantidadIncidentes), backgroundColor:colors.success }]
+    },
+    options:{
+      indexAxis:'y',
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ beginAtZero:true, ticks:{ color:'inherit' }, grid:{ color:'inherit' } },
+        y:{ ticks:{ color:'inherit' }, grid:{ color:'inherit' } }
+      }
+    }
+  });
 
 <script>
   document.getElementById('totalIncidentes').textContent = resumenEstadisticas.totalIncidentes.toLocaleString();
