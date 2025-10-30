@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CyberSafe Portal - Quiz</title>
+
+  <!-- Bootstrap 5.3.8 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    main {
+      flex: 1;
+    }
+    .question-card {
+      max-width: 700px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body class="bg-body text-body">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top border-bottom">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold text-primary" href="index.html">
+      <i class="bi bi-shield-check me-1"></i>CyberSafe Portal
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarLinks">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarLinks">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="alertas.html">Alertas</a></li>
+        <li class="nav-item"><a class="nav-link" href="estadisticas.html">Estadísticas</a></li>
+        <li class="nav-item"><a class="nav-link active" href="#">Quiz</a></li>
+        <li class="nav-item">
+          <button class="btn btn-outline-primary btn-sm ms-3" id="themeToggle" aria-label="Cambiar tema">
+            <i class="bi bi-moon-stars-fill"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container pt-5 mt-4">
+  <h2 class="text-center fw-bold mb-1">Quiz de Seguridad</h2>
+  <p class="text-center text-muted mb-4" id="progressText">Pregunta 1 de 5</p>
+
+  <div class="progress mb-4" style="height: 6px;">
+    <div class="progress-bar" role="progressbar" style="width: 20%;" id="progressBar"></div>
+  </div>
+
+  <div class="card p-4 shadow-sm bg-body-secondary question-card" id="quizCard">
+    <div id="questionContainer"></div>
+    <button class="btn btn-primary mt-4 w-100" id="nextBtn" disabled>Siguiente Pregunta</button>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-body-tertiary border-top mt-5 py-3">
+  <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+    <div class="d-flex align-items-center mb-2 mb-md-0">
+      <i class="bi bi-shield-check text-success me-2"></i>
+      <span class="fw-semibold">CyberSafe Portal</span>
+    </div>
+    <small class="text-secondary text-end">
+      © 2025 CyberSafe Portal. Educación en seguridad informática.
+    </small>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const themeToggle = document.getElementById('themeToggle');
+  const icon = themeToggle.querySelector('i');
+  function updateIcon(theme) {
+    icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+  }
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-bs-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateIcon(newTheme);
+  });
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-bs-theme', savedTheme);
+  updateIcon(savedTheme);
+</script>
+
+<script>
+const questions = [
+  {
+    text: "¿Qué es el phishing?",
+    options: [
+      "Un tipo de virus informático",
+      "Una técnica para engañar a las personas y robar información confidencial",
+      "Un método para acelerar la conexión a internet",
+      "Una forma de actualizar el software"
+    ],
+    correct: 1,
+    explanation: "El phishing es una técnica de ingeniería social para engañar a los usuarios y obtener datos sensibles como contraseñas o información bancaria."
+  },
+  {
+    text: "¿Qué medida mejora la seguridad de tus contraseñas?",
+    options: [
+      "Usar tu nombre y fecha de nacimiento",
+      "Utilizar la misma en todas tus cuentas",
+      "Escribirla en papel",
+      "Activar la autenticación en dos pasos"
+    ],
+    correct: 3,
+    explanation: "La autenticación en dos pasos añade una capa de seguridad adicional, haciendo más difícil que alguien acceda sin autorización."
+  },
+  {
+    text: "¿Qué acción es riesgosa al usar Wi-Fi público?",
+    options: [
+      "Navegar en redes sociales",
+      "Realizar transacciones bancarias",
+      "Leer noticias",
+      "Ver videos en YouTube"
+    ],
+    correct: 1,
+    explanation: "Las redes Wi-Fi públicas no son seguras. Evita enviar información sensible o realizar transacciones financieras."
+  },
+  {
+    text: "¿Qué es un gestor de contraseñas?",
+    options: [
+      "Un virus que roba contraseñas",
+      "Una persona que guarda tus contraseñas",
+      "Una app segura para almacenar contraseñas",
+      "Un teclado especial"
+    ],
+    correct: 2,
+    explanation: "Un gestor de contraseñas es una aplicación segura que guarda tus claves de forma cifrada para ayudarte a gestionarlas."
+  },
+  {
+    text: "¿Qué debes hacer si recibes un correo sospechoso?",
+    options: [
+      "Responder y pedir más información",
+      "Hacer clic en los enlaces",
+      "Marcarlo como spam o reportarlo",
+      "Reenviarlo a tus contactos"
+    ],
+    correct: 2,
+    explanation: "Nunca interactúes con correos sospechosos. Márcalos como spam o repórtalos para evitar amenazas como el phishing."
+  }
+];
+
+let current = 0;
+let score = 0;
+let userAnswers = [];
+
+const questionContainer = document.getElementById("questionContainer");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+const nextBtn = document.getElementById("nextBtn");
+
+function loadQuestion() {
+  const q = questions[current];
+  let html = `
+    <div class="card p-4 bg-body-secondary shadow-sm">
+      <h5 class="fw-bold mb-2">${q.text}</h5>
+      <p class="text-muted">Selecciona la respuesta correcta</p>
+      <form>
+  `;
+
+  q.options.forEach((option, index) => {
+    html += `
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="radio" name="question" id="q${index}" value="${index}">
+        <label class="form-check-label" for="q${index}">
+          ${option}
+        </label>
+      </div>
+    `;
+  });
+
+  html += `</form></div>`;
+  questionContainer.innerHTML = html;
+
+  nextBtn.disabled = true;
+  progressBar.style.width = `${(current / questions.length) * 100}%`;
+  progressText.textContent = `Pregunta ${current + 1} de ${questions.length}`;
+
+  document.querySelectorAll('input[name="question"]').forEach(input => {
+    input.addEventListener('change', () => {
+      nextBtn.disabled = false;
+    });
+  });
+}
+
+nextBtn.addEventListener('click', () => {
+  const selected = document.querySelector('input[name="question"]:checked');
+  if (!selected) return;
+
+  const selectedIndex = parseInt(selected.value);
+  const isCorrect = selectedIndex === questions[current].correct;
+
+  userAnswers.push({
+    question: questions[current].text,
+    selected: questions[current].options[selectedIndex],
+    correct: questions[current].options[questions[current].correct],
+    isCorrect,
+    explanation: questions[current].explanation
+  });
+
+  if (isCorrect) score++;
+
+  current++;
+  if (current < questions.length) {
+    loadQuestion();
+  } else {
+    showResults();
+  }
+});
+
+function showResults() {
+  progressBar.style.width = "100%";
+  progressText.textContent = "Completado";
+  nextBtn.style.display = "none";
+
+  let html = `<h5 class="fw-bold">Resultados</h5>`;
+  html += `<p class="mb-4">Tu puntaje: <strong>${score} de ${questions.length}</strong></p>`;
+
+  userAnswers.forEach((res, index) => {
+    html += `
+      <div class="mb-3 border rounded p-3">
+        <h6 class="fw-semibold">Pregunta ${index + 1}</h6>
+        <p>${res.question}</p>
+        <p><strong>Tu respuesta:</strong>
+          <span class="${res.isCorrect ? 'text-success' : 'text-danger'}">
+            ${res.selected}
+          </span>
+        </p>
+        ${!res.isCorrect ? `<p><strong>Correcta:</strong> ${res.correct}</p>` : ''}
+        <div class="alert alert-info small mt-2 mb-0">
+          <i class="bi bi-lightbulb-fill me-1"></i> ${res.explanation}
+        </div>
+      </div>
+    `;
+  });
+
+  questionContainer.innerHTML = html;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
