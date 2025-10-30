@@ -1,0 +1,139 @@
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import Optional
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class Noticia(BaseModel):
+    titulo: str
+    descripcion: str
+    categoria: str
+    gravedad: str
+    fecha: str
+    fuente: str
+    url: str
+
+noticias_memoria = [
+    {
+        "id": 1,
+        "titulo": "Phishing lidera las ciberamenazas detectadas en 2024",
+        "descripcion": "El phishing se consolidó como el ciberataque más frecuente con 39.6% de todos los ataques por correo electrónico.",
+        "categoria": "phishing",
+        "gravedad": "alta",
+        "fecha": "2024-12-26",
+        "fuente": "ESET Cybersecurity Report 2024",
+        "url": "https://www.itdigitalsecurity.es/endpoint/2024/12/las-ciberamenazas-que-han-marcado-2024"
+    },
+    {
+        "id": 2,
+        "titulo": "Ransomware afecta al 72.7% de organizaciones en 2024",
+        "descripcion": "El ransomware se posicionó como la mayor amenaza con costo promedio de recuperación de 4.54 millones de dólares.",
+        "categoria": "ransomware",
+        "gravedad": "critica",
+        "fecha": "2024-08-21",
+        "fuente": "ExpressVPN Cyber Report 2024",
+        "url": "https://www.expressvpn.com/es/blog/the-true-cost-of-cyber-attacks-in-2024-and-beyond/"
+    },
+    {
+        "id": 3,
+        "titulo": "768 vulnerabilidades CVE fueron explotadas en 2024",
+        "descripcion": "VulnCheck reporta un aumento del 20% en CVEs explotadas comparado con 2023.",
+        "categoria": "vulnerabilidad",
+        "gravedad": "critica",
+        "fecha": "2025-02-07",
+        "fuente": "VulnCheck & CISA Report",
+        "url": "https://blog.segu-info.com.ar/2025/02/analisis-de-las-principales.html"
+    },
+    {
+        "id": 4,
+        "titulo": "El 90% de violaciones de datos son causadas por phishing",
+        "descripcion": "Aproximadamente 3.4 mil millones de correos de phishing se envían diariamente.",
+        "categoria": "phishing",
+        "gravedad": "alta",
+        "fecha": "2024-10-05",
+        "fuente": "Techopedia Statistics 2024",
+        "url": "https://www.techopedia.com/es/estadisticas-ciberseguridad"
+    },
+    {
+        "id": 5,
+        "titulo": "Malware de robo de datos representa el 50% de amenazas a PyMEs",
+        "descripcion": "Keyloggers, spyware y stealers dominan los ataques contra pequeñas y medianas empresas.",
+        "categoria": "malware",
+        "gravedad": "alta",
+        "fecha": "2024-03-13",
+        "fuente": "Sophos Threat Report 2024",
+        "url": "https://news.sophos.com/es-es/2024/03/13/"
+    },
+    {
+        "id": 6,
+        "titulo": "92% de líderes de TI reportan aumento en ciberataques",
+        "descripcion": "Según estudio de Keeper Security, los ataques continúan aumentando significativamente en 2024.",
+        "categoria": "general",
+        "gravedad": "alta",
+        "fecha": "2024-09-20",
+        "fuente": "Keeper Security Study 2024",
+        "url": "https://www.keepersecurity.com/blog/es/2024/09/06/are-cyber-attacks-increasing/"
+    }
+]
+
+siguiente_id = 7
+
+
+@app.get("/api/noticias")
+async def obtener_noticias():
+    return {
+        "success": True,
+        "data": noticias_memoria
+    }
+
+
+@app.get("/api/noticias/{id}")
+async def obtener_noticia_por_id(id: int):
+    for noticia in noticias_memoria:
+        if noticia["id"] == id:
+            return {
+                "success": True,
+                "data": noticia
+            }
+    
+    raise HTTPException(
+        status_code=404,
+        detail={
+            "success": False,
+            "error": "Noticia no encontrada"
+        }
+    )
+
+
+@app.post("/api/noticias")
+async def crear_noticia(noticia: Noticia):
+    global siguiente_id
+    
+    nueva_noticia = {
+        "id": siguiente_id,
+        "titulo": noticia.titulo,
+        "descripcion": noticia.descripcion,
+        "categoria": noticia.categoria,
+        "gravedad": noticia.gravedad,
+        "fecha": noticia.fecha,
+        "fuente": noticia.fuente,
+        "url": noticia.url
+    }
+    
+    noticias_memoria.append(nueva_noticia)
+    siguiente_id += 1
+    
+    return {
+        "success": True,
+        "mensaje": "Noticia creada",
+        "data": nueva_noticia
+    }
