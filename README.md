@@ -137,6 +137,7 @@ Integrantes del equipo:
 - Diego Federico Romero Miravete
 ![Foto](IMG/Foto_Diego_Federico.jpg)
 - Abel Benito Carrasco Hernandez
+![Foto](IMG/FotoBenito.jpg)
 - Emiliano Sebastián Millán Giffard
 - Emilio González Acosta
 ![Foto](IMG/img.jpg)
