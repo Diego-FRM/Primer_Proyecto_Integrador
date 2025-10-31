@@ -150,8 +150,7 @@ Integrantes del equipo:
 - Abel Benito Carrasco Hernandez
 ![Foto](IMG/FotoBenito.jpg)
 
-- Emiliano Sebastián Millán Giffard
-![IMG_5625](https://github.com/user-attachments/assets/31d8f2a3-c30f-4649-88d8-fdab995f0d8f)
+- Emiliano Sebastián Millán Giffard ![IMG_5625 (1)](https://github.com/user-attachments/assets/84c9c276-0a95-4f1c-86e9-87756f168540)
 
 - Emilio González Acosta
 ![Foto](IMG/img.jpg)
