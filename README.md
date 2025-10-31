@@ -122,11 +122,6 @@ pip install -r requirements.txt
 | `quiz.html` | Frontend | Ninguno | Cuestionario funcional. |
 | `main.py` | Backend | Flask | API funcional. |
 
-## 6. Link del cliente
-
-```
-https://diego-frm.github.io/Primer_Proyecto_Integrador/index.html
-```
 
 ### Pasos para prueba
 1. Ejecuta el backend con `python main.py`.  
@@ -137,6 +132,13 @@ https://diego-frm.github.io/Primer_Proyecto_Integrador/index.html
 **CyberSafe Portal** cumple con los requerimientos del proyecto al integrar un backend funcional con un frontend educativo.  
 La arquitectura está diseñada para ejecutarse localmente y demostrar la interacción entre cliente y servidor mediante API REST.
 
+---
+
+## 6. Link del cliente
+
+```
+https://diego-frm.github.io/Primer_Proyecto_Integrador/index.html
+```
 ---
 
 # Primer Proyecto Integrador
