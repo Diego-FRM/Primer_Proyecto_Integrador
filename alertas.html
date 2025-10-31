@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CyberSafe Portal — Alertas</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+</head>
+<body class="bg-body text-body" data-api-base="http://127.0.0.1:5000">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold text-primary" href="index.html">CyberSafe Portal</a>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link active" href="alertas.html">Alertas</a></li>
+        <li class="nav-item"><a class="nav-link" href="Estadisticas.html">Estadísticas</a></li>
+        <li class="nav-item"><a class="nav-link" href="quiz.html">Quiz</a></li>
+        <li class="nav-item">
+          <button id="themeToggle" class="btn btn-outline-primary btn-sm ms-3" title="Cambiar tema">
+            <i class="bi bi-moon-stars-fill"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h1 class="h1 mb-1">Alertas de Ciberseguridad</h1>
+        <p class="text-secondary mb-0">Noticias y avisos desde la API</p>
+      </div>
+    </div>
+
+    <div id="grid" class="row g-4"></div>
+    <nav class="d-flex justify-content-between align-items-center mt-4">
+    <button id="prevBtn" class="btn btn-outline-secondary btn-sm">« Anterior</button>
+    <span id="pageInfo" class="small text-secondary"></span>
+    <button id="nextBtn" class="btn btn-outline-secondary btn-sm">Siguiente »</button>
+</nav>
+
+  </main>
+
+  <footer class="bg-body-tertiary border-top py-3">
+    <div class="container small text-secondary">© 2025 CyberSafe Portal</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="alertas.js" defer></script>
+</body>
+</html>
