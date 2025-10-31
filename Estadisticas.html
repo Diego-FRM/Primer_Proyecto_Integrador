@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CyberSafe Portal - Estadísticas</title>
 
- 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -27,9 +26,9 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarLinks">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
         <li class="nav-item"><a class="nav-link" href="alertas.html">Alertas</a></li>
-        <li class="nav-item"><a class="nav-link" href="Estadisticas.html">Estadísticas</a></li>
+        <li class="nav-item"><a class="nav-link active" href="Estadisticas.html">Estadísticas</a></li>
         <li class="nav-item"><a class="nav-link" href="quiz.html">Quiz</a></li>
         <li class="nav-item">
           <button class="btn btn-outline-primary btn-sm ms-3" id="themeToggle" aria-label="Cambiar tema">
@@ -41,20 +40,20 @@
   </div>
 </nav>
 
-<div class="container pt-5 mt-4 text-center">
-  <h2 class="fw-bold text-primary">Estadísticas</h2>
-  <p class="text-secondary">Dashboard de métricas y tendencias en seguridad informática</p>
-</div>
+<main class="container pt-5 mt-4">
+  <h2 class="text-center fw-bold mb-1 text-primary">Estadísticas</h2>
+  <p class="text-center text-secondary mb-4">Dashboard de métricas y tendencias en seguridad informática</p>
 
-<div class="container my-5">
-  <div class="row g-4">
+  <!-- Stats -->
+  <div class="row g-4 mb-4">
     <div class="col-md-3">
       <div class="p-4 bg-body-secondary rounded shadow-sm h-100">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <span class="fw-semibold">Incidentes reportados</span>
           <i class="bi bi-shield-check text-success"></i>
         </div>
-        <h3 class="fw-bold" id="totalIncidentes">1,925</h3>
+        <h3 id="kpiIncidentes" class="fw-bold">—</h3>
+        <small class="text-secondary">Frecuencia: <span id="kpiFrecuencia">—</span></small>
       </div>
     </div>
     <div class="col-md-3">
@@ -63,7 +62,8 @@
           <span class="fw-semibold">Vulns explotadas</span>
           <i class="bi bi-bug text-danger"></i>
         </div>
-        <h3 class="fw-bold" id="alertasActivas">314</h3>
+        <h3 id="kpiVulns" class="fw-bold">—</h3>
+        <small class="text-secondary">Crecimiento anual: <span id="kpiIncremento">—</span></small>
       </div>
     </div>
     <div class="col-md-3">
@@ -72,7 +72,8 @@
           <span class="fw-semibold">Ransomware (orgs)</span>
           <i class="bi bi-exclamation-octagon text-warning"></i>
         </div>
-        <h3 class="fw-bold" id="vulnerabilidadesCriticas">87</h3>
+        <h3 id="kpiRansomOrgs" class="fw-bold">—</h3>
+        <small class="text-secondary">Aumento: <span id="kpiRansomAumento">—</span></small>
       </div>
     </div>
     <div class="col-md-3">
@@ -125,53 +126,26 @@
   </div>
 </main>
 
+<!-- Footer -->
 <footer class="bg-body-tertiary border-top mt-5 py-3">
   <div class="container text-center">
     <small class="text-secondary">© 2025 CyberSafe Portal · Educación en seguridad informática</small>
   </div>
 </footer>
 
-<!-- Datos -->
-<script>
-const datosGraficaAtaques = {
-  etiquetas: ['Phishing', 'Ransomware', 'Malware', 'DDoS', 'BEC/Fraude', 'Otros'],
-  valores: [39.6, 22, 20, 8, 6, 4.4], 
-  año: 2024,
-  totalIncidentes: 493000000,
-  frecuencia: 'Un ciberataque cada 39 segundos',
-  fuente: 'Techopedia & ExpressVPN Cyber Report 2024',
-  urlFuente: 'https://www.techopedia.com/es/estadisticas-ciberseguridad'
-};
-
-const datosGraficaVulnerabilidades = {
-  meses: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-  cantidades: [45, 52, 58, 65, 62, 68, 55, 60, 50, 48, 42, 35],
-  año: 2024,
-  totalAnual: 768,
-  incrementoAnual: 20,
-  fuente: 'VulnCheck 2024 Report & CISA',
-  urlFuente: 'https://blog.segu-info.com.ar/2025/02/analisis-de-las-principales.html'
-};
-
-const resumenEstadisticas = {
-  totalIncidentes: 493000000, 
-  vulnerabilidadesExplotadas: 768,
-  aumentoRansomware: 55,
-  organizacionesAfectadas: 72.7,
-  costoPromedioRansomware: '4.54 millones USD',
-  phishingCorreosDiarios: '3.4 mil millones',
-  porcentajeErrorHumano: 95,
-  fuente: 'Múltiples reportes 2024 (ExpressVPN, Sophos, ESET)',
-  urlFuente: 'https://www.expressvpn.com/es/blog/the-true-cost-of-cyber-attacks-in-2024-and-beyond/'
-};
-</script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
+<script src="CiberseguridadDatos.js"></script>
+
+<!-- Tema -->
 <script>
   const themeToggle = document.getElementById('themeToggle');
   const icon = themeToggle.querySelector('i');
-  function updateIcon(theme){ icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill'; }
+
+  function updateIcon(theme){
+    icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+  }
+
   themeToggle.addEventListener('click', () => {
     const t = document.documentElement.getAttribute('data-bs-theme');
     const n = t === 'light' ? 'dark' : 'light';
@@ -179,56 +153,39 @@ const resumenEstadisticas = {
     localStorage.setItem('theme', n);
     updateIcon(n);
   });
+
   const saved = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-bs-theme', saved);
   updateIcon(saved);
-</script>
 
-<!-- Data -->
-<script>
-  const datosGraficaAtaques = {
-    etiquetas: ['Phishing','Ransomware','Malware','DDoS','BEC/Fraude','Otros'],
-    valores: [39.6,22,20,8,6,4.4],
-    año: 2024,
-    totalIncidentes: 493000000,
-    frecuencia: 'Un ciberataque cada 39 segundos'
+  const fmt = n => typeof n === 'number' ? n.toLocaleString('es-MX') : n;
+
+  
+  document.getElementById('kpiIncidentes').textContent = fmt(resumenEstadisticas.totalIncidentes);
+  document.getElementById('kpiFrecuencia').textContent = datosGraficaAtaques.frecuencia;
+  document.getElementById('kpiVulns').textContent = fmt(resumenEstadisticas.vulnerabilidadesExplotadas);
+  document.getElementById('kpiIncremento').textContent = `${datosGraficaVulnerabilidades.incrementoAnual}%`;
+  document.getElementById('kpiRansomOrgs').textContent = `${resumenEstadisticas.organizacionesAfectadas}%`;
+  document.getElementById('kpiRansomAumento').textContent = `${resumenEstadisticas.aumentoRansomware}%`;
+  document.getElementById('kpiPhishingEmails').textContent = resumenEstadisticas.phishingCorreosDiarios;
+  document.getElementById('kpiErrorHumano').textContent = `${resumenEstadisticas.porcentajeErrorHumano}%`;
+  document.getElementById('anioAtaques').textContent = datosGraficaAtaques.año;
+  document.getElementById('anioVulns').textContent = datosGraficaVulnerabilidades.año;
+
+  const colors = {
+    primary:'#0d6efd', info:'#0dcaf0', success:'#20c997',
+    warning:'#fd7e14', danger:'#dc3545', purple:'#6f42c1',
+    teal:'#198754', gray:'#adb5bd'
   };
 
-  const datosGraficaVulnerabilidades = {
-    meses: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
-    cantidades: [45,52,58,65,62,68,55,60,50,48,42,35],
-    año: 2024,
-    incrementoAnual: 20
-  };
-
-  const resumenEstadisticas = {
-    totalIncidentes: 493000000,
-    vulnerabilidadesExplotadas: 768,
-    aumentoRansomware: 55,
-    organizacionesAfectadas: 72.7,
-    phishingCorreosDiarios: '3.4 mil millones',
-    porcentajeErrorHumano: 95
-  };
-
-  const ubicacionesIncidentes = [
-    { ciudad:'Ciudad de México', cantidadIncidentes:1250 },
-    { ciudad:'Monterrey', cantidadIncidentes:890 },
-    { ciudad:'Guadalajara', cantidadIncidentes:760 },
-    { ciudad:'Tijuana', cantidadIncidentes:420 },
-    { ciudad:'Cancún', cantidadIncidentes:340 },
-    { ciudad:'Ciudad Juárez', cantidadIncidentes:280 }
-  ];
-</script>
-
-<script>
-  new Chart(document.getElementById('chartBar'), {
-    type: 'bar',
-    data: {
+  const donutChart = new Chart(document.getElementById('chartDonut'), {
+    type:'doughnut',
+    data:{
       labels: datosGraficaAtaques.etiquetas,
-      datasets: [{
-        label: 'Casos detectados (%)',
+      datasets:[{
         data: datosGraficaAtaques.valores,
-        backgroundColor: '#20c997'
+        backgroundColor:[colors.success,colors.primary,colors.purple,colors.warning,colors.teal,colors.gray],
+        borderWidth:0
       }]
     },
     options:{
@@ -242,7 +199,7 @@ const resumenEstadisticas = {
   });
 
   const absData = datosGraficaAtaques.valores.map(p => Math.round(resumenEstadisticas.totalIncidentes * (p/100)));
-  window.barAbsChart = new Chart(document.getElementById('chartBarAbs'), {
+  const barAbsChart = new Chart(document.getElementById('chartBarAbs'), {
     type:'bar',
     data:{
       labels: datosGraficaAtaques.etiquetas,
@@ -258,19 +215,16 @@ const resumenEstadisticas = {
     }
   });
 
-  new Chart(document.getElementById('chartLine'), {
-    type: 'line',
-    data: {
+  const lineChart = new Chart(document.getElementById('chartLine'), {
+    type:'line',
+    data:{
       labels: datosGraficaVulnerabilidades.meses,
-      datasets: [{
-        label: 'Vulnerabilidades CVE',
+      datasets:[{
+        label:'CVEs explotadas',
         data: datosGraficaVulnerabilidades.cantidades,
-        borderColor: '#0d6efd',
-        backgroundColor: 'rgba(13,110,253,0.1)',
-        tension: 0.4,
-        fill: true,
-        pointRadius: 4,
-        pointBackgroundColor: '#0d6efd'
+        borderColor:colors.primary,
+        backgroundColor:'rgba(13,110,253,.12)',
+        tension:.35, fill:true, pointRadius:3, pointBackgroundColor:colors.primary
       }]
     },
     options:{
@@ -283,7 +237,7 @@ const resumenEstadisticas = {
     }
   });
 
-  window.citiesChart = new Chart(document.getElementById('chartCities'), {
+  const citiesChart = new Chart(document.getElementById('chartCities'), {
     type:'bar',
     data:{
       labels: ubicacionesIncidentes.map(c=>c.ciudad),
@@ -299,10 +253,44 @@ const resumenEstadisticas = {
     }
   });
 
-<script>
-  document.getElementById('totalIncidentes').textContent = resumenEstadisticas.totalIncidentes.toLocaleString();
-  document.getElementById('alertasActivas').textContent = resumenEstadisticas.vulnerabilidadesExplotadas;
-  document.getElementById('vulnerabilidadesCriticas').textContent = resumenEstadisticas.aumentoRansomware + '%';
+  const charts = [donutChart, barAbsChart, lineChart, citiesChart];
+
+  function getBootstrapChartColors() {
+    const cs = getComputedStyle(document.documentElement);
+    return {
+      text: cs.getPropertyValue('--bs-body-color').trim() || '#212529',
+      grid: cs.getPropertyValue('--bs-border-color').trim() || 'rgba(0,0,0,.1)',
+      bg: cs.getPropertyValue('--bs-body-bg').trim() || '#fff'
+    };
+  }
+
+  function applyThemeToCharts() {
+    const { text, grid, bg } = getBootstrapChartColors();
+    Chart.defaults.color = text;
+    Chart.defaults.borderColor = grid;
+    charts.forEach(ch => {
+      if (ch.options.scales) {
+        Object.values(ch.options.scales).forEach(s => {
+          if (s.ticks) s.ticks.color = text;
+          if (s.grid) s.grid.color = grid;
+        });
+      }
+      if (ch.options.plugins?.legend?.labels)
+        ch.options.plugins.legend.labels.color = text;
+      if (ch.options.plugins?.tooltip) {
+        ch.options.plugins.tooltip.titleColor = text;
+        ch.options.plugins.tooltip.bodyColor  = text;
+        ch.options.plugins.tooltip.backgroundColor = bg;
+        ch.options.plugins.tooltip.borderColor = grid;
+      }
+      ch.update();
+    });
+  }
+
+  applyThemeToCharts();
+  themeToggle.addEventListener('click', () => setTimeout(applyThemeToCharts, 200));
+  new MutationObserver(() => applyThemeToCharts())
+    .observe(document.documentElement, { attributes:true, attributeFilter:['data-bs-theme'] });
 </script>
 
 </body>
