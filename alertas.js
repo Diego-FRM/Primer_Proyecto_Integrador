@@ -6,6 +6,29 @@ const API_URL  = `${API_BASE.replace(/\/$/, "")}/api/news`;  // /api/news
 const grid        = document.getElementById("grid");
 const themeToggle = document.getElementById("themeToggle");
 const themeIcon   = themeToggle?.querySelector("i");
+const prevBtn   = document.getElementById("prevBtn");
+const nextBtn   = document.getElementById("nextBtn");
+const pageInfo  = document.getElementById("pageInfo");
+
+// Estado de paginación y cache
+let page  = 1;
+let limit = 3;
+let pages = 2;
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutos
+const cacheKey = (p = page, l = limit) => `newsCache:${p}:${l}`;
+
+function readCache(p = page, l = limit) {
+  try {
+    const raw = localStorage.getItem(cacheKey(p, l));
+    if (!raw) return null;
+    const { payload, savedAt } = JSON.parse(raw);
+    if (!savedAt || (Date.now() - savedAt) > CACHE_TTL_MS) return null;
+    return payload;
+  } catch { return null; }
+}
+function saveCache(p = page, l = limit, payload) {
+  try { localStorage.setItem(cacheKey(p, l), JSON.stringify({ payload, savedAt: Date.now() })); } catch {}
+}
 
 // Tema oscuro
 (function initTheme(){
@@ -21,15 +44,14 @@ themeToggle?.addEventListener("click", () => {
   if (themeIcon) themeIcon.className = next === "dark" ? "bi bi-sun-fill" : "bi bi-moon-stars-fill";
 });
 
-// Seguridad, funcion para proteger contra inyecciones HTML
+// Seguridad, función para proteger contra inyecciones HTML
 function escapeHtml(value) {
   const text = (value === null || value === undefined) ? "" : String(value);
   const entities = { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" };
   return text.replace(/[&<>"']/g, (char) => entities[char]);
 }
 
-
-// Funcion para asignar clase de Bootstrap segun severidad
+// Función para asignar clase de Bootstrap según severidad
 function sevBadgeClass(sev){
   const s = String(sev||"").toLowerCase();
   if (s === "critical") return "text-bg-danger";
@@ -38,7 +60,7 @@ function sevBadgeClass(sev){
   return "text-bg-secondary";
 }
 
-// Renderizar noticias
+// Renderizar tarjeta
 function toCard(n){
   const title   = n.title || "Alerta";
   const summary = n.summary || "";
@@ -70,8 +92,8 @@ function toCard(n){
     </div>`;
 }
 
-// Fetch y cargar noticias
-async function loadNews(){
+// UI helpers
+function setLoading(){
   grid.innerHTML = `
     <div class="col-12">
       <div class="d-flex align-items-center gap-2 text-secondary">
@@ -79,28 +101,102 @@ async function loadNews(){
         <span>Cargando noticias…</span>
       </div>
     </div>`;
-
-  try{
-    const res = await fetch(API_URL, { headers: { "Accept": "application/json" }, mode: "cors" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const items = Array.isArray(data) ? data : (Array.isArray(data.items) ? data.items : []);
-
-    if (!items.length){
-      grid.innerHTML = `
-        <div class="col-12">
-          <div class="text-warning">No hay noticias para mostrar.</div>
-        </div>`;
-      return;
-    }
-    grid.innerHTML = items.map(toCard).join("");
-  }catch(err){
-    console.error(err);
+}
+function renderItems(items){
+  if (!items?.length){
     grid.innerHTML = `
       <div class="col-12">
-        <div class="text-danger">Error al cargar noticias desde ${escapeHtml(API_URL)}.</div>
+        <div class="text-warning">No hay noticias para mostrar.</div>
       </div>`;
+    return;
+  }
+  grid.innerHTML = items.map(toCard).join("");
+}
+function updatePagerUI(currPage, totalPages, offline=false){
+  if (pageInfo) pageInfo.textContent = `Página ${currPage} de ${Math.max(1,totalPages)}${offline ? " (offline)" : ""}`;
+  if (prevBtn)  prevBtn.disabled = currPage <= 1;
+  if (nextBtn)  nextBtn.disabled = currPage >= totalPages;
+}
+
+// Fetch con paginación y cache local
+async function fetchNewsPage(p = page, l = limit){
+  const res = await fetch(`${API_URL}?page=${p}&limit=${l}`, { headers: { "Accept": "application/json" }, mode: "cors" });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  const items = Array.isArray(data.items) ? data.items
+              : Array.isArray(data) ? data
+              : [];
+  const meta = {
+    items,
+    page: Number.isFinite(data.page)  ? data.page  : p,
+    limit: Number.isFinite(data.limit) ? data.limit : l,
+    total: Number.isFinite(data.total) ? data.total : items.length,
+    pages: Number.isFinite(data.pages) ? data.pages : 1
+  };
+  return meta;
+}
+
+// Cargar noticias
+async function loadNews(){
+  setLoading();
+
+  // 1) Pintado rápido desde cache si existe y no expiró
+  const cached = readCache(page, limit);
+  if (cached?.items) {
+    renderItems(cached.items);
+    pages = Math.max(1, cached.pages || 1);
+    updatePagerUI(cached.page || page, pages, false);
+  }
+
+  // 2) Intentar red
+  try{
+    const meta = await fetchNewsPage(page, limit);
+    saveCache(page, limit, meta);
+    renderItems(meta.items);
+    pages = Math.max(1, meta.pages || 1);
+    page  = meta.page;
+    limit = meta.limit;
+    updatePagerUI(page, pages, false);
+  }catch(err){
+    console.error(err);
+    if (!cached?.items){
+      grid.innerHTML = `
+        <div class="col-12">
+          <div class="text-danger">Error al cargar noticias desde ${escapeHtml(API_URL)}.</div>
+        </div>`;
+      updatePagerUI(page, pages, false);
+    } else {
+      updatePagerUI(page, pages, true);
+    }
   }
 }
+
+// Listeners de paginación
+prevBtn?.addEventListener("click", () => {
+  if (page > 1){ page -= 1; loadNews(); }
+});
+nextBtn?.addEventListener("click", () => {
+  if (page < pages){ page += 1; loadNews(); }
+});
+limitSel?.addEventListener("change", (e) => {
+  const val = parseInt(e.target.value, 10);
+  if (Number.isFinite(val) && val > 0) {
+    limit = val;
+    page  = 1;
+    loadNews();
+  }
+});
+
+// Inicialización: permite page/limit en querystring
+(function initFromQuery(){
+  try{
+    const q = new URLSearchParams(location.search);
+    const qp = parseInt(q.get("page")  || "", 10);
+    const ql = parseInt(q.get("limit") || "", 10);
+    if (Number.isFinite(qp) && qp > 0) page  = qp;
+    if (Number.isFinite(ql) && ql > 0) limit = ql;
+    if (limitSel) limitSel.value = String(limit);
+  }catch{}
+})();
 
 loadNews();

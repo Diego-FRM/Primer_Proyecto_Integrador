@@ -1,3 +1,4 @@
+import math
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
@@ -66,12 +67,28 @@ NEWS = [
     }
 ]
 
-# --- Endpoints de noticias ---
+# Endpoints de noticias 
 
 # Lista completa (sin paginación ni ordenamiento)
 @app.route("/api/news", methods=["GET"])
 def list_news():
-    return jsonify(NEWS)
+    page = max(int(request.args.get("page", 1)), 1)
+    limit = min(max(int(request.args.get("limit", 6)), 1), 50)
+
+    start = (page - 1) * limit
+    end = start + limit
+
+    items = NEWS[start:end]
+    total = len(NEWS)
+    pages = math.ceil(total / limit) if limit else 1
+
+    return jsonify({
+        "items": items,
+        "page": page,
+        "limit": limit,
+        "total": total,
+        "pages": pages
+    }), 200
 
 # Obtener una sola noticia por id
 @app.route("/api/news/<int:nid>", methods=["GET"])
@@ -198,7 +215,7 @@ resumenEstadisticas = {
     "urlFuente": "https://www.expressvpn.com/es/blog/the-true-cost-of-cyber-attacks-in-2024-and-beyond/"
 }
 
-# -------- CORS simple (desarrollo) --------
+# CORS simple (desarrollo)
 @app.after_request
 def add_cors_headers(resp):
     resp.headers["Access-Control-Allow-Origin"] = "*"
@@ -206,12 +223,12 @@ def add_cors_headers(resp):
     resp.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,OPTIONS"
     return resp
 
-# -------- Health --------
+# Health 
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok"}), 200
 
-# -------- Estadísticas (lo que usa estadisticas.html) --------
+# Estadísticas (lo que usa estadisticas.html)
 @app.route("/stats/ataques", methods=["GET"])
 def stats_ataques():
     return jsonify(datosGraficaAtaques), 200
@@ -224,7 +241,7 @@ def stats_vulnerabilidades():
 def stats_resumen():
     return jsonify(resumenEstadisticas), 200
 
-# -------- Manejo de errores --------
+# Manejo de errores
 @app.errorhandler(404)
 def not_found(_e):
     return jsonify({"error": "Ruta no encontrada."}), 404
