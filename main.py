@@ -168,7 +168,7 @@ def update_news(nid: int):
             return jsonify({"detail": f"severity inválido '{sev}'. Valores permitidos: {', '.join(sorted(allowed))}"}), 400
         n["severity"] = sev
 
-    # Validsar tags si vienen
+    # Validar tags si vienen
     if "tags" in data:
         if not isinstance(data["tags"], list):
             return jsonify({"detail": "El campo 'tags' debe ser una lista"}), 400
