@@ -1,105 +1,68 @@
 from flask import Flask, jsonify, request
-from datetime import datetime
 
 app = Flask(__name__)
 
-# -------- Datos en memoria --------
-usuarios = [
-    {
-        "id": 100001,
-        "nombre": "Alice",
-        "email": "alice@example.com",
-        "rol": "admin",
-        "esActivo": True,
-        "telefono": "+52-55-1111-2222",
-        "tags": ["seguridad", "propietario"],
-        "fechaCreacion": "2025-10-01",
-        "ultimoAcceso": "2025-10-25"
-    },
-    {
-        "id": 100002,
-        "nombre": "Bob",
-        "email": "bob@example.com",
-        "rol": "editor",
-        "esActivo": True,
-        "telefono": "+52-33-1234-5678",
-        "tags": ["redactor"],
-        "fechaCreacion": "2025-10-05",
-        "ultimoAcceso": "2025-10-26"
-    }
-]
-
-# --- Noticias falsas ---
+# --- Noticias ---
 NEWS = [
     {
         "id": 101,
-        "title": "Campaña masiva de phishing bancario en MX",
-        "summary": "Se detectaron correos falsos suplantando bancos populares. Evita dar clic en enlaces y verifica el remitente.",
-        "severity": "high",  # low | medium | high | critical
-        "source": "CERT-MX",
-        "tags": ["phishing", "banca", "email"],
-        "region": "MX",
-        "url": "https://example.com/alerta/101"
+        "title": "Phishing lidera las ciberamenazas detectadas en 2024",
+        "summary": "El phishing se consolidó como el ciberataque más frecuente con 39.6% de todos los ataques por correo electrónico.",
+        "severity": "high",
+        "source": "ESET Cybersecurity Report 2024",
+        "tags": ["phishing", "correo electrónico", "estadísticas"],
+        "region": "GLOBAL",
+        "url": "https://www.itdigitalsecurity.es/endpoint/2024/12/las-ciberamenazas-que-han-marcado-2024"
     },
     {
         "id": 102,
-        "title": "Parche urgente corrige 0-day en navegador",
-        "summary": "Actualiza hoy: el fallo permite ejecución remota de código al visitar sitios maliciosos.",
+        "title": "Ransomware afecta al 72.7% de organizaciones en 2024",
+        "summary": "El ransomware se posicionó como la mayor amenaza con costo promedio de recuperación de 4.54 millones de dólares.",
         "severity": "critical",
-        "source": "Vendor",
-        "tags": ["actualización", "navegador"],
+        "source": "ExpressVPN Cyber Report 2024",
+        "tags": ["ransomware", "costo", "estadísticas"],
         "region": "GLOBAL",
-        "url": "https://example.com/alerta/102"
+        "url": "https://www.expressvpn.com/es/blog/the-true-cost-of-cyber-attacks-in-2024-and-beyond/"
     },
     {
         "id": 103,
-        "title": "Ataques de ransomware a hospitales",
-        "summary": "Varios centros médicos reportan cifrado de datos. Respaldos offline y segmentación son clave.",
-        "severity": "high",
-        "source": "ISAC Salud",
-        "tags": ["ransomware", "salud", "respaldo"],
-        "region": "MX",
-        "url": "https://example.com/alerta/103"
+        "title": "768 vulnerabilidades CVE fueron explotadas en 2024",
+        "summary": "VulnCheck reporta un aumento del 20% en CVEs explotadas comparado con 2023.",
+        "severity": "critical",
+        "source": "VulnCheck & CISA Report",
+        "tags": ["vulnerabilidades", "CVE", "estadísticas"],
+        "region": "GLOBAL",
+        "url": "https://blog.segu-info.com.ar/2025/02/analisis-de-las-principales.html"
     },
     {
         "id": 104,
-        "title": "Malware móvil roba credenciales",
-        "summary": "Apps de terceros recolectan tokens de sesión. Evita APKs fuera de tiendas oficiales.",
-        "severity": "medium",
-        "source": "Laboratorio AV",
-        "tags": ["malware", "android", "credenciales"],
+        "title": "El 90% de violaciones de datos son causadas por phishing",
+        "summary": "Aproximadamente 3.4 mil millones de correos de phishing se envían diariamente.",
+        "severity": "high",
+        "source": "Techopedia Statistics 2024",
+        "tags": ["phishing", "violaciones de datos", "estadísticas"],
         "region": "GLOBAL",
-        "url": "https://example.com/alerta/104"
+        "url": "https://www.techopedia.com/es/estadisticas-ciberseguridad"
     },
     {
-    "id": 105,
-    "title": "Filtración de datos en plataforma de videojuegos",
-    "summary": "Una brecha de seguridad expuso correos y contraseñas de miles de usuarios. Se recomienda cambiar las credenciales y activar la autenticación en dos pasos.",
-    "severity": "high",
-    "source": "GamerSec Labs",
-    "tags": ["filtración", "videojuegos", "contraseñas"],
-    "region": "GLOBAL",
-    "url": "https://example.com/alerta/105"
+        "id": 105,
+        "title": "Malware de robo de datos representa el 50% de amenazas a PyMEs",
+        "summary": "Keyloggers, spyware y stealers dominan los ataques contra pequeñas y medianas empresas.",
+        "severity": "high",
+        "source": "Sophos Threat Report 2024",
+        "tags": ["malware", "PyMEs", "robo de datos"],
+        "region": "GLOBAL",
+        "url": "https://news.sophos.com/es-es/2024/03/13/"
     },
     {
-    "id": 106,
-    "title": "Nueva campaña de smishing suplanta a empresas de paquetería",
-    "summary": "Mensajes SMS con links falsos piden pago de aduanas para liberar paquetes. Recomendación: no abrir enlaces ni proporcionar datos.",
-    "severity": "medium",
-    "source": "CERT-MX",
-    "tags": ["smishing", "paquetería", "ingeniería social"],
-    "region": "MX",
-    "url": "https://example.com/alerta/106"
-    },
-    {
-    "id": 107,
-    "title": "Backdoor en plugin de CMS afecta a tiendas en línea",
-    "summary": "Un plugin popular fue comprometido e inyecta código para robar datos de tarjeta. Se sugiere desactivar el plugin y cambiar credenciales.",
-    "severity": "critical",
-    "source": "Vendor",
-    "tags": ["ecommerce", "plugin", "backdoor", "credenciales"],
-    "region": "GLOBAL",
-    "url": "https://example.com/alerta/107"
+        "id": 106,
+        "title": "92% de líderes de TI reportan aumento en ciberataques",
+        "summary": "Según estudio de Keeper Security, los ataques continúan aumentando significativamente en 2024.",
+        "severity": "medium",
+        "source": "Keeper Security Study 2024",
+        "tags": ["ciberataques", "TI", "estadísticas"],
+        "region": "GLOBAL",
+        "url": "https://www.keepersecurity.com/blog/es/2024/09/06/are-cyber-attacks-increasing/"
     }
 ]
 
@@ -117,6 +80,90 @@ def get_news(nid: int):
     if not n:
         return jsonify({"detail": "News not found"}), 404
     return jsonify(n)
+
+# Crear una noticia
+@app.route("/api/news", methods=["POST"])
+def create_news():
+    if not request.is_json:
+        return jsonify({"detail": "Content-Type debe ser application/json"}), 415
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"detail": "Cuerpo inválido; se esperaba JSON"}), 400
+
+    # Campos requeridos mínimos
+    required = ["title", "summary", "severity", "source"]
+    missing = [k for k in required if not data.get(k)]
+    if missing:
+        return jsonify({"detail": f"Faltan campos requeridos: {', '.join(missing)}"}), 400
+
+    # Validar severidad (ahora incluye 'low')
+    sev = str(data.get("severity")).lower()
+    allowed = {"low", "medium", "high", "critical"}
+    if sev not in allowed:
+        return jsonify({"detail": f"severity inválido '{sev}'. Valores permitidos: {', '.join(sorted(allowed))}"}), 400
+
+    # Validar tags
+    tags = data.get("tags", [])
+    if tags is None:
+        tags = []
+    if not isinstance(tags, list):
+        return jsonify({"detail": "El campo 'tags' debe ser una lista"}), 400
+    tags = [str(t).strip() for t in tags]
+
+    # Generar id siguiente
+    new_id = (max((n["id"] for n in NEWS), default=100) + 1)
+
+    news_item = {
+        "id": new_id,
+        "title": str(data["title"]).strip(),
+        "summary": str(data["summary"]).strip(),
+        "severity": sev,
+        "source": str(data.get("source", "custom")).strip(),
+        "tags": tags,
+        "region": str(data.get("region", "GLOBAL")),
+        "url": str(data.get("url", "")),
+    }
+
+    NEWS.append(news_item)
+    return jsonify(news_item), 201
+
+# Modificar una noticia existente
+@app.route("/api/news/<int:nid>", methods=["PUT"])
+def update_news(nid: int):
+    if not request.is_json:
+        return jsonify({"detail": "Content-Type debe ser application/json"}), 415
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"detail": "Cuerpo inválido; se esperaba JSON"}), 400
+
+    # Buscar la noticia existente
+    n = next((x for x in NEWS if x["id"] == nid), None)
+    if not n:
+        return jsonify({"detail": "Noticia no encontrada"}), 404
+
+    # Validar severidad si viene
+    if "severity" in data:
+        sev = str(data["severity"]).lower()
+        allowed = {"low", "medium", "high", "critical"}
+        if sev not in allowed:
+            return jsonify({"detail": f"severity inválido '{sev}'. Valores permitidos: {', '.join(sorted(allowed))}"}), 400
+        n["severity"] = sev
+
+    # Validar tags si vienen
+    if "tags" in data:
+        if not isinstance(data["tags"], list):
+            return jsonify({"detail": "El campo 'tags' debe ser una lista"}), 400
+        n["tags"] = [str(t).strip() for t in data["tags"]]
+
+    # Actualizar campos simples
+    for campo in ("title", "summary", "source", "region", "url"):
+        if campo in data:
+            n[campo] = str(data[campo]).strip()
+
+    return jsonify(n), 200
+
 
 # Datos que reflejan lo que usa estadisticas.html
 datosGraficaAtaques = {
@@ -156,143 +203,23 @@ resumenEstadisticas = {
 def add_cors_headers(resp):
     resp.headers["Access-Control-Allow-Origin"] = "*"
     resp.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    resp.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
+    resp.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,OPTIONS"
     return resp
 
-# -------- Utilidades --------
-# Genera el siguiente id secuencial.
-def _siguiente_id():
-    return max((u["id"] for u in usuarios), default=100002) + 1
-
-# Busca un usuario por id.
-def _buscar_usuario(uid: int):
-    for u in usuarios:
-        if u["id"] == uid:
-            return u
-    return None
-
-# Valida campos requeridos y formatos básicos.
-def _validar_usuario(payload: dict, parcial: bool = False):
-    if not isinstance(payload, dict):
-        return False, "Cuerpo inválido; se esperaba JSON."
-    if not parcial:
-        if "nombre" not in payload or not str(payload["nombre"]).strip():
-            return False, "Falta 'nombre' (texto no vacío)."
-        if "email" not in payload or "@" not in str(payload["email"]):
-            return False, "Falta 'email' válido."
-    if "nombre" in payload and not str(payload["nombre"]).strip():
-        return False, "'nombre' debe ser texto no vacío."
-    if "email" in payload and "@" not in str(payload["email"]):
-        return False, "'email' inválido."
-
-    def _valida_fecha(v):
-        return isinstance(v, str) and len(v) == 10 and v[4] == "-" and v[7] == "-"
-    for campo in ("fechaCreacion", "ultimoAcceso"):
-        if campo in payload and not _valida_fecha(payload[campo]):
-            return False, f"'{campo}' debe tener formato AAAA-MM-DD."
-    return True, None
-
 # -------- Health --------
-# Devuelve estado del servicio.
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok"}), 200
 
-# -------- Usuarios (para index/estadísticas si se conectan a /users) --------
-# Lista todos los usuarios.
-@app.route("/users", methods=["GET"])
-def get_users():
-    return jsonify(usuarios), 200
-
-# Devuelve un usuario por id.
-@app.route("/users/<int:user_id>", methods=["GET"])
-def get_user_by_id(user_id: int):
-    u = _buscar_usuario(user_id)
-    if not u:
-        return jsonify({"error": "Usuario no encontrado."}), 404
-    return jsonify(u), 200
-
-# Crea un nuevo usuario.
-@app.route("/users", methods=["POST"])
-def add_user():
-    if not request.is_json:
-        return jsonify({"error": "Content-Type debe ser application/json"}), 415
-    payload = request.get_json(silent=True)
-    ok, msg = _validar_usuario(payload, parcial=False)
-    if not ok:
-        return jsonify({"error": msg}), 422
-
-    nuevo_id = payload.get("id", _siguiente_id())
-    if any(u["id"] == nuevo_id for u in usuarios):
-        return jsonify({"error": "El id ya existe."}), 409
-
-    nuevo = {
-        "id": nuevo_id,
-        "nombre": payload["nombre"].strip(),
-        "email": payload["email"],
-        "rol": payload.get("rol", "viewer"),
-        "esActivo": bool(payload.get("esActivo", True)),
-        "telefono": payload.get("telefono"),
-        "tags": payload.get("tags", []),
-        "fechaCreacion": payload.get("fechaCreacion"),
-        "ultimoAcceso": payload.get("ultimoAcceso")
-    }
-    usuarios.append(nuevo)
-    return jsonify(nuevo), 201
-
-# Actualiza campos de un usuario por id.
-@app.route("/users/<int:user_id>", methods=["PUT"])
-def update_user(user_id: int):
-    if not request.is_json:
-        return jsonify({"error": "Content-Type debe ser application/json"}), 415
-    u = _buscar_usuario(user_id)
-    if not u:
-        return jsonify({"error": "Usuario no encontrado."}), 404
-
-    payload = request.get_json(silent=True)
-    ok, msg = _validar_usuario(payload, parcial=True)
-    if not ok:
-        return jsonify({"error": msg}), 422
-
-    if "nombre" in payload:
-        u["nombre"] = payload["nombre"].strip()
-    if "email" in payload:
-        u["email"] = payload["email"]
-    if "rol" in payload:
-        u["rol"] = payload["rol"]
-    if "esActivo" in payload:
-        u["esActivo"] = bool(payload["esActivo"])
-    if "telefono" in payload:
-        u["telefono"] = payload["telefono"]
-    if "tags" in payload:
-        u["tags"] = payload["tags"]
-    if "fechaCreacion" in payload:
-        u["fechaCreacion"] = payload["fechaCreacion"]
-    if "ultimoAcceso" in payload:
-        u["ultimoAcceso"] = payload["ultimoAcceso"]
-    return jsonify(u), 200
-
-# Elimina un usuario por id.
-@app.route("/users/<int:user_id>", methods=["DELETE"])
-def delete_user(user_id: int):
-    u = _buscar_usuario(user_id)
-    if not u:
-        return jsonify({"error": "Usuario no encontrado."}), 404
-    usuarios.remove(u)
-    return "", 204
-
 # -------- Estadísticas (lo que usa estadisticas.html) --------
-# Devuelve estructura de ataques por categoría.
 @app.route("/stats/ataques", methods=["GET"])
 def stats_ataques():
     return jsonify(datosGraficaAtaques), 200
 
-# Devuelve estructura de vulnerabilidades por mes.
 @app.route("/stats/vulnerabilidades", methods=["GET"])
 def stats_vulnerabilidades():
     return jsonify(datosGraficaVulnerabilidades), 200
 
-# Devuelve resumen general (tarjetas y totales).
 @app.route("/stats/resumen", methods=["GET"])
 def stats_resumen():
     return jsonify(resumenEstadisticas), 200
