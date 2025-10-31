@@ -146,8 +146,12 @@ Primer Proyecto Integrador de la materia Introducción al Desarrollo Web Otoño 
 Integrantes del equipo:
 - Diego Federico Romero Miravete
 ![Foto](IMG/Foto_Diego_Federico.jpg)
+
 - Abel Benito Carrasco Hernandez
 ![Foto](IMG/FotoBenito.jpg)
+
 - Emiliano Sebastián Millán Giffard
+![IMG_5625](https://github.com/user-attachments/assets/31d8f2a3-c30f-4649-88d8-fdab995f0d8f)
+
 - Emilio González Acosta
 ![Foto](IMG/img.jpg)
