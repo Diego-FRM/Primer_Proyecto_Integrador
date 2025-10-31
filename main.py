@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -27,6 +28,95 @@ usuarios = [
         "ultimoAcceso": "2025-10-26"
     }
 ]
+
+# --- Noticias falsas ---
+NEWS = [
+    {
+        "id": 101,
+        "title": "Campaña masiva de phishing bancario en MX",
+        "summary": "Se detectaron correos falsos suplantando bancos populares. Evita dar clic en enlaces y verifica el remitente.",
+        "severity": "high",  # low | medium | high | critical
+        "source": "CERT-MX",
+        "tags": ["phishing", "banca", "email"],
+        "region": "MX",
+        "url": "https://example.com/alerta/101"
+    },
+    {
+        "id": 102,
+        "title": "Parche urgente corrige 0-day en navegador",
+        "summary": "Actualiza hoy: el fallo permite ejecución remota de código al visitar sitios maliciosos.",
+        "severity": "critical",
+        "source": "Vendor",
+        "tags": ["actualización", "navegador"],
+        "region": "GLOBAL",
+        "url": "https://example.com/alerta/102"
+    },
+    {
+        "id": 103,
+        "title": "Ataques de ransomware a hospitales",
+        "summary": "Varios centros médicos reportan cifrado de datos. Respaldos offline y segmentación son clave.",
+        "severity": "high",
+        "source": "ISAC Salud",
+        "tags": ["ransomware", "salud", "respaldo"],
+        "region": "MX",
+        "url": "https://example.com/alerta/103"
+    },
+    {
+        "id": 104,
+        "title": "Malware móvil roba credenciales",
+        "summary": "Apps de terceros recolectan tokens de sesión. Evita APKs fuera de tiendas oficiales.",
+        "severity": "medium",
+        "source": "Laboratorio AV",
+        "tags": ["malware", "android", "credenciales"],
+        "region": "GLOBAL",
+        "url": "https://example.com/alerta/104"
+    },
+    {
+    "id": 105,
+    "title": "Filtración de datos en plataforma de videojuegos",
+    "summary": "Una brecha de seguridad expuso correos y contraseñas de miles de usuarios. Se recomienda cambiar las credenciales y activar la autenticación en dos pasos.",
+    "severity": "high",
+    "source": "GamerSec Labs",
+    "tags": ["filtración", "videojuegos", "contraseñas"],
+    "region": "GLOBAL",
+    "url": "https://example.com/alerta/105"
+    },
+    {
+    "id": 106,
+    "title": "Nueva campaña de smishing suplanta a empresas de paquetería",
+    "summary": "Mensajes SMS con links falsos piden pago de aduanas para liberar paquetes. Recomendación: no abrir enlaces ni proporcionar datos.",
+    "severity": "medium",
+    "source": "CERT-MX",
+    "tags": ["smishing", "paquetería", "ingeniería social"],
+    "region": "MX",
+    "url": "https://example.com/alerta/106"
+    },
+    {
+    "id": 107,
+    "title": "Backdoor en plugin de CMS afecta a tiendas en línea",
+    "summary": "Un plugin popular fue comprometido e inyecta código para robar datos de tarjeta. Se sugiere desactivar el plugin y cambiar credenciales.",
+    "severity": "critical",
+    "source": "Vendor",
+    "tags": ["ecommerce", "plugin", "backdoor", "credenciales"],
+    "region": "GLOBAL",
+    "url": "https://example.com/alerta/107"
+    }
+]
+
+# --- Endpoints de noticias ---
+
+# Lista completa (sin paginación ni ordenamiento)
+@app.route("/api/news", methods=["GET"])
+def list_news():
+    return jsonify(NEWS)
+
+# Obtener una sola noticia por id
+@app.route("/api/news/<int:nid>", methods=["GET"])
+def get_news(nid: int):
+    n = next((x for x in NEWS if x["id"] == nid), None)
+    if not n:
+        return jsonify({"detail": "News not found"}), 404
+    return jsonify(n)
 
 # Datos que reflejan lo que usa estadisticas.html
 datosGraficaAtaques = {
