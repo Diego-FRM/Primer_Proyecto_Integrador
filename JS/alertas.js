@@ -1,5 +1,5 @@
 // Configuración API
-const API_BASE = document.body.dataset.apiBase || "http://127.0.0.1:5000";
+const API_BASE = document.body.dataset.apiBase || "https://cybersafe-api.onrender.com";
 const API_URL  = `${API_BASE.replace(/\/$/, "")}/api/news`;  // /api/news
 
 // Referencias DOM
