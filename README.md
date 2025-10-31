@@ -84,7 +84,7 @@ Permite la comunicación con el frontend mediante endpoints configurados.
    * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)
    ```
 3. Para verificar el estado del servidor:
-   [http://127.0.0.1:5000/health](http://127.0.0.1:5000/health)
+   [https://cybersafe-api.onrender.com/health](https://cybersafe-api.onrender.com/health)
 
 ### Endpoints principales
 - `GET /api/news` — obtiene todas las noticias.  
