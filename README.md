@@ -139,3 +139,4 @@ Integrantes del equipo:
 - Abel Benito Carrasco Hernandez
 - Emiliano Sebastián Millán Giffard
 - Emilio González Acosta
+![Foto](IMG/img.jpg)
