@@ -135,6 +135,7 @@ La arquitectura está diseñada para ejecutarse localmente y demostrar la intera
 Primer Proyecto Integrador de la materia Introducción al Desarrollo Web Otoño 2025.
 Integrantes del equipo:
 - Diego Federico Romero Miravete
+![Foto](IMG/Foto_Diego_Federico.jpg)
 - Abel Benito Carrasco Hernandez
 - Emiliano Sebastián Millán Giffard
 - Emilio González Acosta

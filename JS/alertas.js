@@ -178,14 +178,6 @@ prevBtn?.addEventListener("click", () => {
 nextBtn?.addEventListener("click", () => {
   if (page < pages){ page += 1; loadNews(); }
 });
-limitSel?.addEventListener("change", (e) => {
-  const val = parseInt(e.target.value, 10);
-  if (Number.isFinite(val) && val > 0) {
-    limit = val;
-    page  = 1;
-    loadNews();
-  }
-});
 
 // Inicialización: permite page/limit en querystring
 (function initFromQuery(){
@@ -195,7 +187,6 @@ limitSel?.addEventListener("change", (e) => {
     const ql = parseInt(q.get("limit") || "", 10);
     if (Number.isFinite(qp) && qp > 0) page  = qp;
     if (Number.isFinite(ql) && ql > 0) limit = ql;
-    if (limitSel) limitSel.value = String(limit);
   }catch{}
 })();
 
