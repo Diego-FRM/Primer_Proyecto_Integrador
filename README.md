@@ -100,7 +100,9 @@ Permite la comunicación con el frontend mediante endpoints configurados.
 El archivo `requirements.txt` contiene las dependencias necesarias para ejecutar el backend Flask.
 
 ```
-Flask==3.0.3
+Flask==3.1.0
+Werkzeug==3.1.3
+gunicorn==21.2.0
 ```
 
 Instala los paquetes con:
@@ -119,6 +121,12 @@ pip install -r requirements.txt
 | `Estadisticas.html` | Frontend | Datos locales | Gráficas con Chart.js. |
 | `quiz.html` | Frontend | Ninguno | Cuestionario funcional. |
 | `main.py` | Backend | Flask | API funcional. |
+
+## 6. Link del cliente
+
+```
+https://diego-frm.github.io/Primer_Proyecto_Integrador/index.html
+```
 
 ### Pasos para prueba
 1. Ejecuta el backend con `python main.py`.  
